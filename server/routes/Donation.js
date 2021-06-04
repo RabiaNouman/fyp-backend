@@ -4,11 +4,11 @@ const express = require('express');
 //define models schema
 const Donation = require('../models/Donation');
 const Donor = require('../models/Donor');
+const Medicine = require('../models/Medicine');
 
 //define router
 const router = express.Router();
 
-//add new medicine
 
     
 //add new medicine
@@ -18,23 +18,90 @@ router.post("/donation/:id", async(req,res)=>{
     if(donorData){
         const did=_id;
         const { medname,mg,quantity,expiryDate}=req.body;
-    Donation.findOne({medname,mg},(err,donation)=>{
+    Donation.findOne({did,medname,mg},(err,donation)=>{
         if(err)
             res.status(500).json({message : {msgBody : err, msgError: true}});
-        if(donation)
-            res.status(400).json({message : {msgBody : "Medicine is already present", msgError: true}});
+        if(donation){
+            const _id = donation.id;
+            const quantity = donation.quantity;
+            const addquan = req.body.quantity;
+            Donation.findByIdAndUpdate(_id, { quantity: quantity + addquan  },
+                        function (err, donation) {
+                        if (err){
+                            res.status(500).json({message : {msgBody : err, msgError: true}});
+                        }
+                        else{
+                            //res.send(donation);
+                            Medicine.findOne({medname,mg},(err,medicine)=>{
+                                if(err)
+                                    res.status(500).json({message : {msgBody : err, msgError: true}});
+                                if(medicine){
+                                    const _id = medicine.id;
+                                    const quantity = medicine.quantity;
+                                    const addquan = req.body.quantity;
+                                    Medicine.findByIdAndUpdate(_id, { quantity: quantity+addquan  },
+                                                function (err, medicine) {
+                                                if (err){
+                                                    res.status(500).json({message : {msgBody : err, msgError: true}});
+                                                }
+                                                else{
+                                                    res.send(medicine);}});}
+                                    //res.status(400).json({message : {msgBody : "Medicie is already present", msgError: true}});
+                                else{
+                                    const newMedicine = new Medicine({did,medname,mg,quantity,expiryDate});
+                                    newMedicine.save(err=>{
+                                        if(err)
+                                            res.status(500).json({message : {msgBody : err, msgError: true}});
+                                        else 
+                                        res.send(newMedicine);
+                                           // res.status(201).json({message : {msgBody : "Medicine successfully added", msgError: false}});
+                                    });
+                                }
+                            }); 
+                            }
+                            });
+                        }
+        
         else{
             const newDonation = new Donation({did,medname,mg,quantity,expiryDate});
             newDonation.save(err=>{
                 if(err)
                     res.status(500).json({message : {msgBody : err, msgError: true}});
                 else 
-                    res.send(newDonation);
+                    //res.send(newDonation);
+                    Medicine.findOne({medname,mg},(err,medicine)=>{
+                        if(err)
+                            res.status(500).json({message : {msgBody : err, msgError: true}});
+                        if(medicine){
+                            const _id = medicine.id;
+                            const quantity = medicine.quantity;
+                            const addquan = req.body.quantity;
+                            Medicine.findByIdAndUpdate(_id, { quantity: quantity+addquan  },
+                                        function (err, medicine) {
+                                        if (err){
+                                            res.status(500).json({message : {msgBody : err, msgError: true}});
+                                        }
+                                        else{
+                                            res.send(medicine);}});}
+                            //res.status(400).json({message : {msgBody : "Medicie is already present", msgError: true}});
+                        else{
+                            const newMedicine = new Medicine({did,medname,mg,quantity,expiryDate});
+                            newMedicine.save(err=>{
+                                if(err)
+                                    res.status(500).json({message : {msgBody : err, msgError: true}});
+                                else 
+                                res.send(newMedicine);
+                                   // res.status(201).json({message : {msgBody : "Medicine successfully added", msgError: false}});
+                            });
+                        }
+                    }); 
+                    });
+                }
+                   // });
                     //res.status(201).json({message : {msgBody : "Medicine successfully donated", msgError: false}});
             });
         }
-    }); 
-    }
+    
     else{
         res.status(500).json({message : {msgBody : "Donor not present", msgError: true}});
     }

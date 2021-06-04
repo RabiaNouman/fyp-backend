@@ -6,7 +6,7 @@ const router = express.Router();
 
 //define models schema
 const Patient = require("../models/Patient");
-//const Medicine=require("../models/Medicine");
+const Medicine=require("../models/Medicine");
 
 
 
@@ -100,8 +100,25 @@ router.get("/accept/:id",async(req,res)=>{
                                 res.status(500).json({message : {msgBody : err, msgError: true}});
                             }
                             else{
-                                res.send("accepted");
-                            }
+                                const medname=patient.medname;
+                                const mg=patient.mg;
+                                //res.send("accepted");
+                                Medicine.findOne({medname,mg},(err,medicine)=>{
+                                    if(err)
+                                        res.status(500).json({message : {msgBody : err, msgError: true}});
+                                    if(medicine){
+                                        const _id = medicine.id;
+                                        const quantity = medicine.quantity;
+                                        const reqQuan = patient.quantity;
+                                        Medicine.findByIdAndUpdate(_id, { quantity: quantity - reqQuan  },
+                                                    function (err, medicine) {
+                                                    if (err){
+                                                        res.status(500).json({message : {msgBody : err, msgError: true}});
+                                                    }
+                                                    else{
+                                                        res.send(medicine);}});}
+                            });
+                        }
                     });
                 }
         

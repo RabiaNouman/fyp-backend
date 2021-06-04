@@ -2,10 +2,7 @@ const mongoose = require('mongoose');
 const validator = require("validator");
 const bcrypt =require('bcrypt');
 const MedicineSchema=new mongoose.Schema({
-    did:{
-        type:String,
-        required:true
-    },
+
     medname:{
         type:String,
         required:true, 
