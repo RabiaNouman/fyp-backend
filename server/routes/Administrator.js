@@ -30,13 +30,18 @@ router.post("/administrator", async(req,res)=>{
 
 //login admin
 router.post("/administrator/login", async(req,res)=>{
+    console.log(req.body);
     const { email,password } = req.body;
     Administrator.findOne({email,password},(err,administrator)=>{
         if(err)
             res.status(500).json({message : {msgBody : err, msgError: true}});
         if(administrator)
+            {
+                console.log(req.body)
+                console.log(administrator._id);
             res.send(administrator._id);
             //res.status(400).json({message : {msgBody : "login successfully", msgError: true}});
+            }
         else
             res.status(201).json({message : {msgBody : "username or password is incorrect", msgError: false}});
             
