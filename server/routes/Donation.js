@@ -13,6 +13,7 @@ const router = express.Router();
     
 //add new medicine
 router.post("/donation/:id", async(req,res)=>{
+    console.log(req.body);
     const  _id = req.params.id;
     const donorData = await Donor.findById(_id);
     if(donorData){
@@ -109,34 +110,37 @@ router.post("/donation/:id", async(req,res)=>{
 });
 
 
-//read the data of registered medicine
+//read the data of registered 
 router.get("/donation",async(req,res)=>{
-    try{
-        const DonationData=await Donation.find();
-        res.send(DonationData);
-    }catch(e){
-        res.send(e);
-    }
+  try{
+      const DonationData=await Donation.find();
+      res.send(DonationData);
+  }catch(e){
+      res.send(e);
+  }
 })
 
-// get individual medicine data using id
+// get individual medicine data using ids
 router.get("/donation/:id",async(req,res)=>{
-try{
-    const  _id = req.params.id;
+  console.log(req.params.id);
+  try{
+      const  did = req.params.id;
+  
+      const donationData = await Donation.find({did});
+      if(!donationData){
+          res.send("donation not found");
+          return res.status(404).send();
+      }
+      else{
+          res.send(donationData);
+      }
+  }catch(e){
+      res.send("donation not found");
+      res.status(500).send(e);
+  }
+   
+})
 
-    const DonationData = await Donation.findById(_id);
-    if(!DonationData){
-        res.send("medicine not found");
-        return res.status(404).send();
-    }
-    else{
-        res.send(DonationData);
-    }
-}catch(e){
-    res.send("medicine not found");
-    res.status(500).send(e);
-}
-});
 
 // delete medicine by its id
 router.delete("/donation/:id",async(req,res)=>{
