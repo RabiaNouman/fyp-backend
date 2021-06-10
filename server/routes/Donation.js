@@ -25,7 +25,7 @@ router.post("/donation/:id", async(req,res)=>{
         if(donation){
             const _id = donation.id;
             const quantity = donation.quantity;
-            const addquan = req.body.quantity;
+            const addquan = parseInt(req.body.quantity);
             Donation.findByIdAndUpdate(_id, { quantity: quantity + addquan  },
                         function (err, donation) {
                         if (err){
@@ -39,7 +39,7 @@ router.post("/donation/:id", async(req,res)=>{
                                 if(medicine){
                                     const _id = medicine.id;
                                     const quantity = medicine.quantity;
-                                    const addquan = req.body.quantity;
+                                    const addquan = parseInt(req.body.quantity);
                                     Medicine.findByIdAndUpdate(_id, { quantity: quantity+addquan  },
                                                 function (err, medicine) {
                                                 if (err){
@@ -86,6 +86,7 @@ router.post("/donation/:id", async(req,res)=>{
                                             res.send(medicine);}});}
                             //res.status(400).json({message : {msgBody : "Medicie is already present", msgError: true}});
                         else{
+                            quantity=parseInt(quantity);
                             const newMedicine = new Medicine({did,medname,mg,quantity,expiryDate});
                             newMedicine.save(err=>{
                                 if(err)
