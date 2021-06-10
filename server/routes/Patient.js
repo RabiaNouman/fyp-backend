@@ -54,6 +54,23 @@ try{
 }
 });
 
+// delete all requests
+router.delete("/patient",async(req,res)=>{
+    try{
+        Patient.deletePatient();
+        if(deletePatient){
+            res.send("patient deleted");
+            return res.status(400).send();
+        }
+        res.send(deletePatient);
+        res.send("patient not exists");
+        
+    }catch(e){
+        res.send("patient not exists");
+        res.status(500).send(e);
+    }
+    });
+
 // delete patient by its id
 router.delete("/patient/:id",async(req,res)=>{
 try{
@@ -116,7 +133,7 @@ router.get("/accept/:id",async(req,res)=>{
                                                         res.status(500).json({message : {msgBody : err, msgError: true}});
                                                     }
                                                     else{
-                                                        res.send(medicine);}});}
+                                                        res.status(400);}});}
                             });
                         }
                     });

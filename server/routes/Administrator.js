@@ -75,7 +75,7 @@ try{
         return res.status(404).send();
     }
     else{
-        res.send(administratorData);
+        res.status(200);
     }
 }catch(e){
     res.send("administrator not found");
