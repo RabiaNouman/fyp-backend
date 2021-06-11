@@ -71,7 +71,9 @@ try{
         return res.status(404).send();
     }
     else{
+        console.log(donorData);
         res.send(donorData);
+        res.status(200);
     }
 }catch(e){
     res.send("donor not found");

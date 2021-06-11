@@ -39,7 +39,8 @@ router.post("/administrator/login", async(req,res)=>{
             {
                 console.log(req.body)
                 console.log(administrator._id);
-            res.send(administrator._id);
+                res.send(administrator._id);
+                res.status(200);
             //res.status(400).json({message : {msgBody : "login successfully", msgError: true}});
             }
         else
@@ -68,14 +69,16 @@ router.get("/administrator",async(req,res)=>{
 router.get("/administrator/:id",async(req,res)=>{
 try{
     const  _id = req.params.id;
-
+    console.log("I am in backened")
     const administratorData = await Administrator.findById(_id);
     if(!administratorData){
         res.send("administrator not found");
         return res.status(404).send();
     }
     else{
+        res.send(administratorData)
         res.status(200);
+        console.log(administratorData)
     }
 }catch(e){
     res.send("administrator not found");

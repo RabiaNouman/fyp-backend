@@ -133,7 +133,7 @@ router.get("/accept/:id",async(req,res)=>{
                                                         res.status(500).json({message : {msgBody : err, msgError: true}});
                                                     }
                                                     else{
-                                                        res.status(400);}});}
+                                                        res.status(200);}});}
                             });
                         }
                     });
