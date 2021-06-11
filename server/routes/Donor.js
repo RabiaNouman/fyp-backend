@@ -107,6 +107,7 @@ try{
         new:true
     });
     res.send(updateDonor);
+    res.status(200);
 
 }catch(e){
     res.send("Donor not found");

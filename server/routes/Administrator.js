@@ -112,6 +112,7 @@ try{
         new:true
     });
     res.send(updateAdministrator);
+    res.status(200);
 
 }catch(e){
     //res.send("administrator not found");
