@@ -87,7 +87,7 @@ try{
     const deleteDonor = await Donor.findByIdAndDelete(req.params.id);
     if(deleteDonor){
         res.send("Donor deleted");
-        return res.status(400).send();
+        return res.status(200).send();
     }else{
         res.send("Donor not exists");
     }
